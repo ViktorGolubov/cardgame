@@ -4,6 +4,8 @@ public class Card {
     private int magic;
     private int strength;
     private int intelligence;
+    private int hand1;
+    private int hand2;
 
     public Card(int magic, int strength, int intelligence) {
         this.magic = magic;
@@ -26,5 +28,9 @@ public class Card {
     @Override
     public String toString() {
         return "M:" + magic + ", " + "S:" + strength + ", " + "I:" + intelligence;
+
     }
+
+
+
 }

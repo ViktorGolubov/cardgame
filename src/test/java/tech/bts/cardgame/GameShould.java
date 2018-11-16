@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -39,7 +40,7 @@ public class GameShould {
 
         Game game = new Game(new Deck());
 
-        assertEquals("open", game.getState());
+        assertThat(game.getState(), is("open"));
     }
 
     @Test
@@ -51,8 +52,9 @@ public class GameShould {
 
         game.join("john");
 
-        assertEquals(Arrays.asList("john"),
-                game.getPlayerNames());
+        assertThat(game.getState(), is("open"));
+        assertThat(game.getPlayerNames(), is(Arrays.asList("john")));
+
     }
 
     @Test
@@ -66,6 +68,18 @@ public class GameShould {
         game.join("john");
         game.join("mary");
 
-        assertEquals("playing", game.getState());
+        assertThat(game.getState(), is("playing"));
+
+    }
+
+    @Test(expected = JoiningNotAllowedExeption.class)
+    public void not_allow_joining_if_not_open() {
+
+        Game game = new Game(new Deck());
+
+        game.join("john");
+        game.join("mary");
+        game.join("alex");
+
     }
 }

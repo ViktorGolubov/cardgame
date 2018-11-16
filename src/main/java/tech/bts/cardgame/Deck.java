@@ -57,4 +57,16 @@ public class Deck {
 
         return this.cards.remove(this.cards.size() - 1);
     }
+
+    public Hand deal(int size) {
+
+        List<Card> handCards = new ArrayList<Card>();
+
+        for (int i = 0; i <= size; i++) {
+            Card card = this.pickCard();
+            handCards.add(card);
+        }
+
+        return new Hand(handCards);
+    }
 }
