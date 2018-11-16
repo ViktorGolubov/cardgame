@@ -5,33 +5,35 @@ import java.util.List;
 
 public class Game {
 
+    enum State { OPEN, PLAYING }
+
     private final Deck deck;
-    private String state;
+    private State state;
     private List<String> usernames;
 
     public Game(Deck deck) {
 
         this.deck = deck;
-        this.state = "open";
+        this.state = State.OPEN;
         this.usernames = new ArrayList<>();
     }
 
 
-    public Object getState() {
+    public State getState() {
 
         return state;
     }
 
     public void join(String username) {
 
-        if (!state.equals("open")) {
+        if (state != State.OPEN) {
             throw new JoiningNotAllowedExeption();
         }
 
         usernames.add(username);
 
         if (usernames.size() == 2) {
-            state = "playing";
+            state = State.PLAYING;
         }
 
     }

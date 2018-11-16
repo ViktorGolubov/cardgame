@@ -40,7 +40,7 @@ public class GameShould {
 
         Game game = new Game(new Deck());
 
-        assertThat(game.getState(), is("open"));
+        assertThat(game.getState(), is(Game.State.OPEN));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class GameShould {
 
         game.join("john");
 
-        assertThat(game.getState(), is("open"));
+        assertThat(game.getState(), is(Game.State.OPEN));
         assertThat(game.getPlayerNames(), is(Arrays.asList("john")));
 
     }
@@ -68,7 +68,7 @@ public class GameShould {
         game.join("john");
         game.join("mary");
 
-        assertThat(game.getState(), is("playing"));
+        assertThat(game.getState(), is(Game.State.PLAYING));
 
     }
 
