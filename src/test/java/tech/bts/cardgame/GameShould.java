@@ -1,9 +1,13 @@
 package tech.bts.cardgame;
 
 import org.junit.Test;
+import tech.bts.cardgame.exceptions.*;
+import tech.bts.cardgame.model.Card;
+import tech.bts.cardgame.model.Deck;
+import tech.bts.cardgame.model.Game;
 
-import java.awt.*;
 import java.util.Arrays;
+import java.util.HashSet;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -55,7 +59,7 @@ public class GameShould {
         game.join("john");
 
         assertThat(game.getState(), is(Game.State.OPEN));
-        assertThat(game.getPlayerNames(), is(Arrays.asList("john")));
+        assertThat(game.getPlayerNames(), is(new HashSet<>(Arrays.asList("john"))));
 
     }
 
@@ -71,7 +75,7 @@ public class GameShould {
         game.join("mary");
 
         assertThat(game.getState(), is(Game.State.PLAYING));
-        assertThat(game.getPlayerNames(), is(Arrays.asList("john","mary")));
+        assertThat(game.getPlayerNames(), is( new HashSet<>(Arrays.asList("john","mary"))));
 
     }
 
@@ -194,7 +198,7 @@ public class GameShould {
         game.discard("susan");
     }
 
-    @Test(expected = UserDiscardMoreThan2CardsException.class)
+    @Test(expected = UserDiscardTooManyCardsException.class)
     public void let_discard_only_2_cards_per_user() {
         Deck deck = new Deck();
         Card card1 = new Card(2, 3, 5);
@@ -235,5 +239,33 @@ public class GameShould {
         game.keepCard("susan");
 
 
+    }
+
+    @Test
+    public void not_allow_picking_more_cards_after_keeping_3_cards() {
+        Deck deck = new Deck();
+        Card card1 = new Card(2, 3, 5);
+        Card card2 = new Card(3, 2, 5);
+        Card card3 = new Card(4, 3, 3);
+        Card card4 = new Card(4, 4, 2);
+
+        deck.add(card1);
+        deck.add(card2);
+        deck.add(card3);
+        deck.add(card4);
+
+        Game game = new Game(deck);
+
+        game.join("susan");
+        game.join("peter");
+
+
+        Card pickedСard1 = game.pickCard("susan");
+        game.keepCard("susan");
+        Card pickedСard2 = game.pickCard("susan");
+        game.keepCard("susan");
+        Card pickedСard3 = game.pickCard("susan");
+        game.keepCard("susan");
+        Card pickedСard4 = game.pickCard("susan");
     }
 }
