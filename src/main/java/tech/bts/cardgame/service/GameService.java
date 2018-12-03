@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import tech.bts.cardgame.model.Card;
 import tech.bts.cardgame.model.Deck;
 import tech.bts.cardgame.model.Game;
-import tech.bts.cardgame.model.JoinGame;
+import tech.bts.cardgame.model.GameUser;
 import tech.bts.cardgame.repository.GameRepository;
+
+import java.util.List;
 
 @Service
 public class GameService {
@@ -20,7 +23,7 @@ public class GameService {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/games")
-    public void createGame() {
+    public Game createGame() {
 
         Deck deck = new Deck();
         deck.generate();
@@ -28,11 +31,24 @@ public class GameService {
         Game game = new Game(deck);
 
         gameRepo.create(game);
+
+        return game;
     }
 
-    public void joinGame(JoinGame joinGame) {
+    public void joinGame(GameUser gameUser) {
 
-        Game game = gameRepo.getById(joinGame.getGameId());
-        game.join(joinGame.getUsername());
+        Game game = gameRepo.getById(gameUser.getGameId());
+        game.join(gameUser.getUsername());
+    }
+
+    public Card pickCard(GameUser gameUser) {
+
+        Game game = gameRepo.getById(gameUser.getGameId());
+       return game.pickCard(gameUser.getUsername());
+    }
+
+    public List<Game> getAllGames() {
+
+       return gameRepo.getAll();
     }
 }

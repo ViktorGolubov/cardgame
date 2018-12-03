@@ -33,7 +33,7 @@ public class Deck {
         Random random = new Random();
 
 
-        for (int i = 0; i < this.cards.size() - 1; i++) {
+        for (int i = 0; i < this.cards.size(); i++) {
 
            // int b = this.cards.size() - 1;
 

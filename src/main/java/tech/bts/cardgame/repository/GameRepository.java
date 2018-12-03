@@ -3,7 +3,9 @@ import org.springframework.stereotype.Repository;
 import tech.bts.cardgame.model.Game;
 import tech.bts.cardgame.model.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,5 +31,10 @@ public class GameRepository {
 
         return gameMap.get(id);
 
+    }
+
+    public List<Game> getAll() {
+
+        return new ArrayList<>( gameMap.values() );
     }
 }
