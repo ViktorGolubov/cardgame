@@ -7,6 +7,7 @@ import tech.bts.cardgame.model.GameUser;
 import tech.bts.cardgame.service.GameService;
 
 
+import java.util.Collection;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -31,7 +32,7 @@ public class GameApiController {
     }
 
     @RequestMapping(method = GET)
-    public List<Game> getAllGames() {
+    public Collection<Game> getAllGames() {
 
         return gameService.getAllGames();
     }
