@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import tech.bts.cardgame.model.Game;
 import tech.bts.cardgame.model.GameUser;
 import tech.bts.cardgame.service.GameService;
+import tech.bts.cardgame.util.HandlebarsUtil;
+
 import javax.servlet.http.HttpServletResponse;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 import java.io.IOException;
@@ -24,22 +26,19 @@ import java.util.Map;
 @RequestMapping(path = "/games")
 public class GameWebController {
     private GameService gameService;
+    private Handlebars handlebars;
 
     @Autowired
     public GameWebController(GameService gameService) {
         this.gameService = gameService;
+
     }
 
 
     @RequestMapping(method = GET)
     public String getAllGames() throws IOException {
 
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".hbs");
-        Handlebars handlebars = new Handlebars(loader);
-
-        Template template = handlebars.compile("game-list");
+        Template template = HandlebarsUtil.compile("game-list");
 
         Map<String, Object> values = new HashMap<>();
         values.put("games", gameService.getAllGames());
@@ -75,17 +74,11 @@ public class GameWebController {
 
         Game game = gameService.getGameById(gameId);
 
-        TemplateLoader loader = new ClassPathTemplateLoader();
-        loader.setPrefix("/templates");
-        loader.setSuffix(".hbs");
-        Handlebars handlebars = new Handlebars(loader);
-
         Template template = handlebars.compile("game-detail");
 
         Map<String, Object> values = new HashMap<>();
         values.put("game", game);
         values.put("gameIsOpen", game.getState() == Game.State.OPEN);
-
 
         return template.apply(values);
 
