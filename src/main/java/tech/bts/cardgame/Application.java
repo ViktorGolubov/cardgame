@@ -21,17 +21,12 @@ public class Application {
         return args -> {
 
             Game game1 = gameService.createGame();
-            Game game2 =gameService.createGame();
-            Game game3 =gameService.createGame();
-
-
-            //gameUser.setGameId(0);
-            //gameUser.setUsername("bart");
+            Game game2 = gameService.createGame();
+            Game game3 = gameService.createGame();
 
             gameService.joinGame(new GameUser(game1.getId(), "bart"));
             gameService.joinGame(new GameUser(game1.getId(), "lisa"));
             gameService.joinGame(new GameUser(game2.getId(), "homer"));
-
         };
     }
 }
