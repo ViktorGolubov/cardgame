@@ -32,8 +32,22 @@ public class GameWebController {
 
 
     @RequestMapping(method = GET)
-    public String getAllGames() {
+    public String getAllGames() throws IOException {
 
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".hbs");
+        Handlebars handlebars = new Handlebars(loader);
+
+        Template template = handlebars.compile("game-list");
+
+        Map<String, Object> values = new HashMap<>();
+        values.put("games", gameService.getAllGames());
+
+
+        return template.apply(values);
+
+        /*
         String result = "<h1> List of games </h1>";
 
         result += "<p><a href=\"/games/create\">Create game</a></p>\n";
@@ -52,6 +66,7 @@ public class GameWebController {
         result += "</ul>\n";
 
         return result;
+        */
     }
 
 
