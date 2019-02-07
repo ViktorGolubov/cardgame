@@ -1,4 +1,4 @@
-package tech.bts.cardgame.util;
+package tech.bts.cardgame;
 
 public class ListOperations {
 
