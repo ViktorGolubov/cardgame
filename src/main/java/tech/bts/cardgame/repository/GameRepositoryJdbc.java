@@ -34,6 +34,8 @@ public class GameRepositoryJdbc {
             statement.executeUpdate("insert into games (state, players) " +
                     "values("+ game.getState()+" , "+ game.getPlayerNames()+ " , "+")");
 
+            System.out.println(statement);
+
             statement.close();
             connection.close();
 
