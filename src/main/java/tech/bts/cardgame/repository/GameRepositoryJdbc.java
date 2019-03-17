@@ -1,14 +1,13 @@
 package tech.bts.cardgame.repository;
 
+import com.github.jknack.handlebars.internal.lang3.ObjectUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import tech.bts.cardgame.model.Game;
-
 import javax.sql.DataSource;
-import javax.xml.transform.Result;
-import java.sql.Connection;
+import javax.validation.constraints.Null;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 
 /**
@@ -18,98 +17,56 @@ import java.util.*;
 @Repository
 public class GameRepositoryJdbc {
 
-    private DataSource dataSource;
+    private JdbcTemplate jdbcTemplate;
 
     public GameRepositoryJdbc() {
-        this.dataSource = DataSourceUtil.getDataSourceInPath();
+        DataSource dataSource = DataSourceUtil.getDataSourceInPath();
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+
     }
 
 
     public void create(Game game) {
 
-        try {
+        String sql = "insert into games (state, players)" +
+                " values ('" + game.getState() + "', NULL)";
 
-            Connection connection = dataSource.getConnection(); // connection to the database
-            Statement statement = connection.createStatement(); // sql statement that you can send to the database
-            statement.executeUpdate("insert into games (state, players) " +
-                    "values("+ game.getState()+" , "+ game.getPlayerNames()+ " , "+")");
+        jdbcTemplate.update(sql);
 
-            System.out.println(statement);
-
-            statement.close();
-            connection.close();
+    }
 
 
-        } catch (Exception e) {
+    public void update(Game game) {
 
-            throw new RuntimeException("Error in creating games", e);
 
+        String sql = "update games set state = " + game.getState() +
+                "players = " + " " + " where id = " + game.getId();
+
+        jdbcTemplate.update(sql);
+
+    }
+
+    public void createOrUpdate(Game game) {
+
+        if (game.getState() == null) {
+            create(game);
+        } else {
+            update(game);
         }
-
-
     }
 
     public Game getById(long id) {
 
-        try {
-
-            Connection connection = dataSource.getConnection(); // connection to the database
-            Statement statement = connection.createStatement(); // sql statement that you can send to the database
-            ResultSet rs = statement.executeQuery("select * from games where id = " + id);
-
-            statement.executeUpdate(""); // for create method
-
-            Game game = null;
-
-            if (rs.next()) {
-                game = getGame(rs);
-
-            }
-
-            rs.close();
-            statement.close();
-            connection.close();
-
-            return game;
-
-        } catch (Exception e) {
-
-            throw new RuntimeException("Error getting the games", e);
-        }
-
-
+        return jdbcTemplate.queryForObject(
+                "select * from games where id = " + id,
+                (rs1, rowNum) -> getGame(rs1));
     }
 
     public List<Game> getAll() {
 
-        try {
-
-            Connection connection = dataSource.getConnection(); // connection to the database
-            Statement statement = connection.createStatement(); // sql statement that you can send to the database
-            ResultSet rs = statement.executeQuery("select * from games");
-
-
-            List<Game> games = new ArrayList<>();
-
-
-            while (rs.next()) {
-
-
-                Game game = getGame(rs);
-                games.add(game);
-            }
-
-            rs.close();
-            statement.close();
-            connection.close();
-
-
-            return games;
-
-        } catch (Exception e) {
-
-             throw new RuntimeException("Error getting the games", e);
-        }
+        return jdbcTemplate.query(
+                "select * from games",
+                (rs1, rowNum) -> getGame(rs1));
 
     }
 
@@ -131,4 +88,6 @@ public class GameRepositoryJdbc {
         }
         return game;
     }
+
+
 }
